@@ -62,12 +62,18 @@ module Rapns
           body['results'].each_with_index do |result, i|
             errors[i] = result['error'] if result['error']
           end
+          puts body
 
           if body['success'].to_i == 0 && errors.values.all? { |error| UNAVAILABLE_STATES.include?(error) }
             all_devices_unavailable(response)
           elsif errors.values.any? { |error| UNAVAILABLE_STATES.include?(error) }
             some_devices_unavailable(response, errors)
           else
+            errors.keys.each do |i|
+              if errors[i] == 'InvalidRegistration' 
+                reflect(:gcm_not_registered, @notification, @notification.registration_ids[i])
+              end
+            end
             raise Rapns::DeliveryError.new(nil, @notification.id, describe_errors(errors))
           end
         end

@@ -55,6 +55,10 @@ Rapns.reflect do |on|
   # Call 'error_code' and 'error_description' on the notification for the cause.
   # on.notification_failed do |notification|
   # end
+  
+  # Called on GCM NotRegistered delivery failed.
+  # on.gcm_not_registered do |notification, registration_id|
+  # end
 
   # Called when a notification will be retried at a later date.
   # Call 'deliver_after' on the notification for the next delivery date
